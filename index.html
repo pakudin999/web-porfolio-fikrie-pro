@@ -31,14 +31,21 @@
         {
           title: "Online Order Pro",
           url: "https://autosystem.web.konten.site/",
+          images: [
+            "https://raw.githubusercontent.com/pakudin999/web-porfolio-fikrie-pro/main/Artboard%20HOME.png",
+            "https://raw.githubusercontent.com/pakudin999/web-porfolio-fikrie-pro/main/Artboard%20ORDER.png",
+            "https://raw.githubusercontent.com/pakudin999/web-porfolio-fikrie-pro/main/Artboard%20INVOICE.png"
+          ],
         },
         {
           title: "Report Generator PDF",
           url: "https://reportmedia.konten.site/",
+          images: [],
         },
         {
           title: "Gold Calculation & Customer Database",
           url: "https://mgsbsystem.konten.site/",
+          images: [],
         },
       ];
 
@@ -63,8 +70,85 @@
           />
         </svg>
       );
+      
+      const ChevronLeftIcon = ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+        </svg>
+      );
+
+      const ChevronRightIcon = ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      );
 
       // --- COMPONENTS ---
+       const ImageSlider = ({ images }) => {
+        const [currentIndex, setCurrentIndex] = React.useState(0);
+
+        if (!images || images.length === 0) {
+            return (
+                <div className="aspect-video bg-slate-700/50 rounded-md flex items-center justify-center text-slate-500">
+                    <span>Image Preview</span>
+                </div>
+            );
+        }
+
+        const goToPrevious = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isFirstSlide = currentIndex === 0;
+            const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
+            setCurrentIndex(newIndex);
+        };
+
+        const goToNext = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isLastSlide = currentIndex === images.length - 1;
+            const newIndex = isLastSlide ? 0 : currentIndex + 1;
+            setCurrentIndex(newIndex);
+        };
+
+        return (
+            <div className="relative aspect-video rounded-md overflow-hidden group/slider">
+                <img 
+                    src={images[currentIndex]} 
+                    alt={`Project image ${currentIndex + 1}`} 
+                    className="w-full h-full object-cover transition-all duration-500 ease-in-out"
+                />
+                
+                {images.length > 1 && (
+                    <>
+                        <button
+                            onClick={goToPrevious}
+                            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            aria-label="Previous image"
+                        >
+                            <ChevronLeftIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={goToNext}
+                            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+                            aria-label="Next image"
+                        >
+                            <ChevronRightIcon className="w-5 h-5" />
+                        </button>
+                         <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex space-x-2">
+                            {images.map((_, slideIndex) => (
+                                <div
+                                    key={slideIndex}
+                                    className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${currentIndex === slideIndex ? 'bg-white scale-110 w-4' : 'bg-white/50'}`}
+                                ></div>
+                            ))}
+                        </div>
+                    </>
+                )}
+            </div>
+        );
+    };
+      
       const HeroSection = () => {
         return (
           <section className="min-h-screen flex items-center justify-center p-8">
@@ -102,24 +186,6 @@
         );
       };
 
-      const ProjectCard = ({ title, url }) => {
-        return (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block p-8 rounded-xl bg-slate-800 border border-slate-700 hover:bg-slate-700/50 hover:border-cyan-400/50 transform transition-all duration-300 ease-in-out hover:-translate-y-2 group"
-          >
-            <div className="flex justify-between items-center">
-              <h3 className="text-xl font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
-                {title}
-              </h3>
-              <ExternalLinkIcon className="w-6 h-6 text-slate-500 group-hover:text-teal-400 transition-colors duration-300" />
-            </div>
-          </a>
-        );
-      };
-
       const ProjectsSection = () => {
         return (
           <section id="projects" className="py-20 px-8">
@@ -130,9 +196,27 @@
                 </h2>
                 <p className="text-slate-500">You can buy and custom.</p>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {projects.map((project, index) => (
-                  <ProjectCard key={index} title={project.title} url={project.url} />
+              <div className="grid md:grid-cols-2 gap-8">
+                {projects.map((project) => (
+                  <a
+                    key={project.title}
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg group transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1"
+                  >
+                    <div className="p-2">
+                        <ImageSlider images={project.images} />
+                    </div>
+                    <div className="p-4 pt-2 flex-grow flex justify-between items-center">
+                      <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
+                        {project.title}
+                      </h3>
+                      <div className="transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                        <ExternalLinkIcon className="w-5 h-5 text-slate-500 group-hover:text-teal-400" />
+                      </div>
+                    </div>
+                  </a>
                 ))}
               </div>
             </div>
