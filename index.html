@@ -30,7 +30,7 @@
       const projects = [
         {
           title: "Online Order Pro",
-          url: "https://imgur.com/a/FzQWiFH",
+          url: "https://autosystem.web.konten.site/",
           images: [
             "https://i.imgur.com/6qOnFJm.png",
             "https://i.imgur.com/CdPmjXE.png",
@@ -44,11 +44,6 @@
             "https://i.imgur.com/Ewdg1F0.png",
             "https://i.imgur.com/ytyjmHI.png"
           ],
-        },
-        {
-          title: "Gold Calculation & Customer Database",
-          url: "https://mgsbsystem.konten.site/",
-          images: [],
         },
       ];
 
@@ -200,27 +195,35 @@
                 <p className="text-slate-500">You can buy and custom.</p>
               </div>
               <div className="grid md:grid-cols-2 gap-8">
-                {projects.map((project) => (
-                  <a
-                    key={project.title}
-                    href={project.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg group transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1"
-                  >
-                    <div className="p-2">
-                        <ImageSlider images={project.images} />
-                    </div>
-                    <div className="p-4 pt-2 flex-grow flex justify-between items-center">
-                      <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
-                        {project.title}
-                      </h3>
-                      <div className="transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                        <ExternalLinkIcon className="w-5 h-5 text-slate-500 group-hover:text-teal-400" />
+                {projects.map((project) => {
+                  const isLinkable = !!project.url;
+                  const Tag = isLinkable ? 'a' : 'div';
+                  const tagProps = isLinkable 
+                    ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' } 
+                    : {};
+
+                  return (
+                    <Tag
+                      key={project.title}
+                      {...tagProps}
+                      className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg group transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1"
+                    >
+                      <div className="p-2">
+                          <ImageSlider images={project.images} />
                       </div>
-                    </div>
-                  </a>
-                ))}
+                      <div className="p-4 pt-2 flex-grow flex justify-between items-center">
+                        <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
+                          {project.title}
+                        </h3>
+                        {isLinkable && (
+                          <div className="transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                            <ExternalLinkIcon className="w-5 h-5 text-slate-500 group-hover:text-teal-400" />
+                          </div>
+                        )}
+                      </div>
+                    </Tag>
+                  );
+                })}
               </div>
             </div>
           </section>
