@@ -30,6 +30,20 @@
       .animate-spin-slow {
         animation: spin 4s linear infinite, pulse 3s ease-in-out infinite;
       }
+      .aspect-video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 */
+        height: 0;
+        overflow: hidden;
+        border-radius: 0.375rem; /* rounded-md */
+      }
+      .aspect-video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
     </style>
     <!-- React and Babel for JSX in browser -->
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
@@ -45,6 +59,7 @@
           title: "Online Order Pro",
           url: "https://autosystem.web.konten.site/",
           images: [
+            "https://i.imgur.com/FEIBKeC.png",
             "https://i.imgur.com/6qOnFJm.png",
             "https://i.imgur.com/CdPmjXE.png",
             "https://i.imgur.com/YvgjzHZ.png"
@@ -91,6 +106,12 @@
       const ChevronRightIcon = ({ className = "w-6 h-6" }) => (
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+        </svg>
+      );
+      
+      const TikTokIcon = ({ className = "w-6 h-6" }) => (
+        <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.03-4.63-1.1-6.16-3.04-1.24-1.57-1.87-3.54-1.87-5.51 0-.01 0-.01 0-.02 1.52-.02 3.05-.02 4.57-.02.01.16.02.33.04.5.04 1.1.52 2.07 1.33 2.82.84.79 1.91 1.11 3.1 1.02.8-.08 1.57-.38 2.21-.92.61-.51 1.02-1.21 1.18-2.02.04-.23.06-.47.06-.7.02-3.12.02-6.24.02-9.36-.01-2.61-.91-5.08-2.65-6.93-1.61-1.7-3.79-2.56-6.13-2.52-1.28.02-2.56.24-3.77.72-.01-1.52-.02-3.05-.01-4.57.51-.15 1.02-.29 1.54-.41 1.28-.29 2.58-.45 3.88-.45z" />
         </svg>
       );
 
@@ -213,7 +234,7 @@
       
       const HeroSection = () => {
         return (
-          <section className="min-h-screen flex items-center justify-center p-8">
+          <section className="min-h-screen flex items-center justify-center p-4 md:p-8">
             <div className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
               {/* Left side: Image */}
               <div className="relative flex-shrink-0 w-52 h-52 md:w-64 md:h-64">
@@ -235,7 +256,7 @@
               <div className="flex flex-col items-center md:items-start text-center md:text-left">
                 <TypingAnimation
                   text="Mohamad Fikrie"
-                  className="text-5xl md:text-7xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500"
+                  className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500"
                 />
                 <h2 className="text-xl md:text-2xl font-medium text-slate-400 mb-4">
                   Content Creator & AI Enthusiast
@@ -252,17 +273,78 @@
         );
       };
 
-      const ProjectsSection = () => {
+      const SocialMediaSection = () => {
         return (
-          <section id="projects" className="py-20 px-8">
+          <section id="socials" className="py-20 px-4 md:px-8">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
+                  Connect With Me
+                </h2>
+                <p className="text-slate-500">Follow my journey and creative work.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                
+                {/* YouTube Card */}
+                <div className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg p-3 sm:p-4 transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
+                  <div className="aspect-video-container mb-4">
+                    <iframe
+                      src="https://www.youtube.com/embed/6QeXlzO8p90"
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="w-full h-full"
+                    ></iframe>
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <h3 className="text-base sm:text-xl font-bold text-slate-100 mb-2">
+                      📺 YouTube
+                    </h3>
+                    <p className="text-slate-400 mb-4 text-xs sm:text-sm leading-relaxed flex-grow">
+                      Exclusive videos exploring social themes.
+                    </p>
+                    <a href="https://youtu.be/6QeXlzO8p90?si=HZawk-ETWvAqU_XZ" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center text-center gap-1 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 px-3 py-2 sm:px-4 rounded-lg transition-colors font-bold self-start text-xs sm:text-sm">
+                      Watch Now
+                      <ExternalLinkIcon className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* TikTok Card */}
+                <div className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg p-4 sm:p-6 transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
+                   <div className="flex flex-col flex-grow text-center items-center justify-center">
+                      <TikTokIcon className="w-10 h-10 mb-2 sm:w-16 sm:h-16 sm:mb-4 text-slate-400"/>
+                      <h3 className="text-base sm:text-xl font-bold text-slate-100 mb-2">
+                        🎭 TikTok
+                      </h3>
+                      <p className="text-slate-400 mb-4 text-xs sm:text-sm leading-relaxed max-w-xs">
+                        A place for my spontaneous creative content.
+                      </p>
+                      <a href="https://www.tiktok.com/@konten_beban?_t=ZS-8xC1ifBV3zc&_r=1" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center text-center gap-1 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 px-3 py-2 sm:px-4 rounded-lg transition-colors font-bold self-center text-xs sm:text-sm">
+                        View Profile
+                        <ExternalLinkIcon className="w-4 h-4" />
+                      </a>
+                   </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+        );
+      };
+
+      const ProjectsSection = () => {
+        return (
+          <section id="projects" className="py-20 px-4 md:px-8">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
                   My Projects
                 </h2>
-                <p className="text-slate-500">You can buy and custom.</p>
+                <p className="text-slate-500">Available for Purchase & Customization.</p>
               </div>
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-2 gap-4 md:gap-8">
                 {projects.map((project) => {
                   const isLinkable = !!project.url;
                   const Tag = isLinkable ? 'a' : 'div';
@@ -280,7 +362,7 @@
                           <ImageSlider images={project.images} />
                       </div>
                       <div className="p-4 pt-2 flex-grow flex justify-between items-center">
-                        <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
+                        <h3 className="text-base md:text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
                           {project.title}
                         </h3>
                         {isLinkable && (
@@ -301,7 +383,7 @@
       const Footer = () => {
         const currentYear = new Date().getFullYear();
         return (
-          <footer className="py-8 px-8 text-center text-slate-500 border-t border-slate-800">
+          <footer className="py-8 px-4 md:px-8 text-center text-slate-500 border-t border-slate-800">
             <p>&copy; {currentYear} MOHAMAD FIKRIE</p>
           </footer>
         );
@@ -311,6 +393,7 @@
         return (
           <main className="bg-slate-900 min-h-screen">
             <HeroSection />
+            <SocialMediaSection />
             <ProjectsSection />
             <Footer />
           </main>
