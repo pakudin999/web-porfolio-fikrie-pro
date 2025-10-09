@@ -279,22 +279,45 @@
           <section id="socials" className="py-20 px-4 md:px-8">
             <div className="max-w-5xl mx-auto">
               
+              <div className="text-center mb-12">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
+                      Service Editing
+                  </h2>
+                  <p className="text-slate-500">Bringing your creative vision to life.</p>
+              </div>
+
                {/* Featured Video with Glassmorphism Effect */}
               <div className="bg-slate-800/30 backdrop-blur-lg border border-slate-700/50 rounded-xl p-4 md:p-6 mb-16 shadow-lg shadow-cyan-500/10">
-                <div className="flex items-center gap-3 mb-4 px-1">
-                  <div className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></div>
-                  <h3 className="text-lg font-bold text-slate-200 tracking-wider">CREATE LOGO/WATERMARK</h3>
-                </div>
-                <div className="relative">
-                  <div className="aspect-video-container">
-                    <iframe
-                      src="https://drive.google.com/file/d/1b_6DOzPpbvL-BmVTAm4pxVsNtBWKNd4l/preview"
-                      frameBorder="0"
-                      allow="autoplay; encrypted-media"
-                      allowFullScreen
-                      title="Featured Video"
-                      className="w-full h-full"
-                    ></iframe>
+                <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+                  {/* Left: Video Preview */}
+                  <div className="w-full md:w-1/2 flex-shrink-0">
+                    <div className="aspect-video-container shadow-lg shadow-black/30">
+                      <iframe
+                        src="https://drive.google.com/file/d/1b_6DOzPpbvL-BmVTAm4pxVsNtBWKNd4l/preview"
+                        frameBorder="0"
+                        allow="autoplay; encrypted-media"
+                        allowFullScreen
+                        title="Featured Video"
+                        className="w-full h-full"
+                      ></iframe>
+                    </div>
+                  </div>
+                  {/* Right: Info Text */}
+                  <div className="w-full md:w-1/2 flex flex-col justify-center">
+                    <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-4">
+                      RM50 Je? Logo Power Macam Ni Pun Boleh?!
+                    </h3>
+                    <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-3 mb-4">
+                      <p className="text-lg font-semibold text-amber-400">
+                        🔥 LOGO TYPO STYLE DARI <del className="text-amber-400/50">RM100</del> &rarr; RM50 SAHAJA!
+                      </p>
+                    </div>
+                    <p className="text-slate-400">
+                      Unik &bull; Cepat &bull; Siap Pakai
+                    </p>
+                    <p className="text-sm text-slate-500 mt-3">
+                      Promo terhad – tempah sekarang!
+                    </p>
                   </div>
                 </div>
               </div>
@@ -372,7 +395,7 @@
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
                   My Projects
                 </h2>
-                <p className="text-slate-500">Available for Purchase & Customization.</p>
+                <p className="text-slate-500">Purchase & Customization</p>
               </div>
               <div className="grid grid-cols-2 gap-4 md:gap-8">
                 {projects.map((project) => {
