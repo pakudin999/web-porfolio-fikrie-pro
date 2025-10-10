@@ -27,6 +27,13 @@
           opacity: 0.6;
         }
       }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
       .animate-spin-slow {
         animation: spin 4s linear infinite, pulse 3s ease-in-out infinite;
       }
@@ -281,7 +288,55 @@
       };
 
       const SocialMediaSection = () => {
-        const whatsappMessage = encodeURIComponent("hye, saya nak tanya untuk pakage RM50 Je? Logo Power Macam Ni Pun Boleh?! 🔥 LOGO TYPO STYLE DARI RM100 → RM50 SAHAJA");
+        const services = [
+            {
+              type: 'video',
+              mediaSrc: "https://drive.google.com/file/d/1b_6DOzPpbvL-BmVTAm4pxVsNtBWKNd4l/preview",
+              title: "RM50 Je? Logo Power Macam Ni Pun Boleh?!",
+              priceText: "LOGO TYPO STYLE",
+              originalPrice: "100",
+              discountedPrice: "50",
+              details: "Unik &bull; Cepat &bull; Siap Pakai",
+              promo: "Promo terhad – tempah sekarang!",
+              whatsappMessage: "hye, saya nak tanya untuk pakage RM50 Je? Logo Power Macam Ni Pun Boleh?! 🔥 LOGO TYPO STYLE DARI RM100 → RM50 SAHAJA"
+            },
+            {
+              type: 'image',
+              mediaSrc: "https://i.imgur.com/uJiYtNh.png",
+              title: "EDIT WARNA BAJU",
+              priceText: "",
+              originalPrice: "10",
+              discountedPrice: "5",
+              details: "Hasil natural. Siap dalam 24 jam.",
+              promo: "Promo terhad — jangan lepas!",
+              whatsappMessage: "hye, saya nak tanya untuk pakage RM5 Je? EDIT WARNA BAJU."
+            }
+        ];
+
+        const [currentServiceIndex, setCurrentServiceIndex] = React.useState(0);
+
+        const goToPreviousService = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isFirst = currentServiceIndex === 0;
+            const newIndex = isFirst ? services.length - 1 : currentServiceIndex - 1;
+            setCurrentServiceIndex(newIndex);
+        };
+
+        const goToNextService = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const isLast = currentServiceIndex === services.length - 1;
+            const newIndex = isLast ? 0 : currentServiceIndex + 1;
+            setCurrentServiceIndex(newIndex);
+        };
+        
+        const goToService = (index) => {
+            setCurrentServiceIndex(index);
+        }
+
+        const currentService = services[currentServiceIndex];
+        const whatsappMessage = encodeURIComponent(currentService.whatsappMessage);
         const whatsappUrl = `https://wa.me/60103602036?text=${whatsappMessage}`;
 
         return (
@@ -295,54 +350,93 @@
                   <p className="text-slate-500">Bringing your creative vision to life.</p>
               </div>
 
-               {/* Featured Video with Glassmorphism Effect */}
-              <div className="max-w-4xl mx-auto bg-slate-800/30 backdrop-blur-lg border border-slate-700/50 rounded-xl p-4 md:p-6 mb-16 shadow-lg shadow-cyan-500/10">
-                <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
-                  {/* Left: Video Preview */}
-                  <div className="w-full md:w-1/2 flex-shrink-0">
-                    <div className="aspect-video-container shadow-lg shadow-black/30">
-                      <iframe
-                        src="https://drive.google.com/file/d/1b_6DOzPpbvL-BmVTAm4pxVsNtBWKNd4l/preview"
-                        frameBorder="0"
-                        allow="autoplay; encrypted-media"
-                        allowFullScreen
-                        title="Featured Video"
-                        className="w-full h-full"
-                      ></iframe>
+               {/* Featured Service Slider with Glassmorphism Effect */}
+              <div className="relative max-w-4xl mx-auto bg-slate-800/30 backdrop-blur-lg border border-slate-700/50 rounded-xl p-4 md:p-6 mb-16 shadow-lg shadow-cyan-500/10 group/service-slider">
+                
+                <div key={currentServiceIndex} className="animate-fade-in">
+                  <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+                    {/* Left: Media Preview */}
+                    <div className="w-full md:w-1/2 flex-shrink-0">
+                      {currentService.type === 'video' ? (
+                          <div className="aspect-video-container shadow-lg shadow-black/30">
+                            <iframe
+                              src={currentService.mediaSrc}
+                              frameBorder="0"
+                              allow="autoplay; encrypted-media"
+                              allowFullScreen
+                              title={currentService.title}
+                              className="w-full h-full"
+                            ></iframe>
+                          </div>
+                      ) : (
+                          <div className="aspect-video rounded-md overflow-hidden shadow-lg shadow-black/30 bg-slate-900/50">
+                              <img src={currentService.mediaSrc} alt={currentService.title} className="w-full h-full object-contain" />
+                          </div>
+                      )}
                     </div>
-                  </div>
-                  {/* Right: Info Text */}
-                  <div className="w-full md:w-1/2 flex flex-col justify-center">
-                    <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-4">
-                      RM50 Je? Logo Power Macam Ni Pun Boleh?!
-                    </h3>
-                    <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-3 mb-4">
-                      <p className="text-lg font-semibold text-amber-400">
-                        🔥 LOGO TYPO STYLE DARI <del className="text-amber-400/50">RM100</del> &rarr; RM50 SAHAJA!
-                      </p>
-                    </div>
-                    
-                    <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div>
-                            <p className="text-slate-400">
-                                Unik &bull; Cepat &bull; Siap Pakai
-                            </p>
-                            <p className="text-sm text-slate-500 mt-1">
-                                Promo terhad – tempah sekarang!
-                            </p>
-                        </div>
-                        <a 
-                            href={whatsappUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-green-500/10 text-green-300 hover:bg-green-500/20 px-4 py-2 rounded-lg transition-colors font-bold self-start sm:self-auto text-sm shrink-0"
-                        >
-                            <WhatsappIcon className="w-5 h-5" />
-                            <span>Tempah di WhatsApp</span>
-                        </a>
+                    {/* Right: Info Text */}
+                    <div className="w-full md:w-1/2 flex flex-col justify-center">
+                      <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-4">
+                        {currentService.title}
+                      </h3>
+                      <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-3 mb-4">
+                        <p className="text-lg font-semibold text-amber-400">
+                          🔥 {currentService.priceText && `${currentService.priceText} DARI `}
+                          <del className="text-amber-400/50">RM{currentService.originalPrice}</del> &rarr; RM{currentService.discountedPrice} SAHAJA!
+                        </p>
+                      </div>
+                      
+                      <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                          <div>
+                              <p className="text-slate-400" dangerouslySetInnerHTML={{ __html: currentService.details }}></p>
+                              <p className="text-sm text-slate-500 mt-1">
+                                  {currentService.promo}
+                              </p>
+                          </div>
+                          <a 
+                              href={whatsappUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 bg-green-500/10 text-green-300 hover:bg-green-500/20 px-4 py-2 rounded-lg transition-colors font-bold self-start sm:self-auto text-sm shrink-0"
+                          >
+                              <WhatsappIcon className="w-5 h-5" />
+                              <span>Tempah di WhatsApp</span>
+                          </a>
+                      </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Slider Controls */}
+                {services.length > 1 && (
+                    <>
+                        <button
+                            onClick={goToPreviousService}
+                            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/service-slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400 z-10"
+                            aria-label="Previous service"
+                        >
+                            <ChevronLeftIcon className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={goToNextService}
+                            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/service-slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400 z-10"
+                            aria-label="Next service"
+                        >
+                            <ChevronRightIcon className="w-5 h-5" />
+                        </button>
+                        <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex space-x-2">
+                            {services.map((_, slideIndex) => (
+                                <button
+                                    key={slideIndex}
+                                    onClick={() => goToService(slideIndex)}
+                                    aria-label={`Go to service ${slideIndex + 1}`}
+                                    className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${currentServiceIndex === slideIndex ? 'bg-white scale-110 w-4' : 'bg-white/50'}`}
+                                ></button>
+                            ))}
+                        </div>
+                    </>
+                )}
+
               </div>
 
 
