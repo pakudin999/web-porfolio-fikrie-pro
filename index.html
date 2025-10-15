@@ -28,8 +28,8 @@
         }
       }
       @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       .animate-fade-in {
         animation: fadeIn 0.5s ease-in-out;
@@ -56,6 +56,13 @@
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Gemini API Client -->
+    <script type="module">
+      import { GoogleGenAI, Modality } from "https://sdk.vercel.ai/google/genai-browser.js";
+      window.GoogleGenAI = GoogleGenAI;
+      window.Modality = Modality;
+    </script>
 </head>
   <body class="bg-slate-900 text-slate-300">
     <div id="root"></div>
@@ -85,160 +92,52 @@
 
       // --- SVG ICONS ---
       const ExternalLinkIcon = ({ className = "w-5 h-5" }) => (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 20 20"
-          fill="currentColor"
-          className={className}
-          aria-hidden="true"
-        >
-          <path
-            fillRule="evenodd"
-            d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z"
-            clipRule="evenodd"
-          />
-          <path
-            fillRule="evenodd"
-            d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.19a.75.75 0 00-.053 1.06z"
-            clipRule="evenodd"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className} aria-hidden="true">
+          <path fillRule="evenodd" d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z" clipRule="evenodd" />
+          <path fillRule="evenodd" d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.19a.75.75 0 00-.053 1.06z" clipRule="evenodd" />
         </svg>
       );
       
-      const ChevronLeftIcon = ({ className = "w-6 h-6" }) => (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-        </svg>
-      );
-
-      const ChevronRightIcon = ({ className = "w-6 h-6" }) => (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-        </svg>
-      );
-      
-      const TikTokIcon = ({ className = "w-6 h-6" }) => (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.03-4.63-1.1-6.16-3.04-1.24-1.57-1.87-3.54-1.87-5.51 0-.01 0-.01 0-.02 1.52-.02 3.05-.02 4.57-.02.01.16.02.33.04.5.04 1.1.52 2.07 1.33 2.82.84.79 1.91 1.11 3.1 1.02.8-.08 1.57-.38 2.21-.92.61-.51 1.02-1.21 1.18-2.02.04-.23.06-.47.06-.7.02-3.12.02-6.24.02-9.36-.01-2.61-.91-5.08-2.65-6.93-1.61-1.7-3.79-2.56-6.13-2.52-1.28.02-2.56.24-3.77.72-.01-1.52-.02-3.05-.01-4.57.51-.15 1.02-.29 1.54-.41 1.28-.29 2.58-.45 3.88-.45z" />
-        </svg>
-      );
-
-      const WhatsappIcon = ({ className = "w-6 h-6" }) => (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="currentColor">
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01s-.521.074-.792.372c-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
-        </svg>
-      );
+      const ChevronLeftIcon = ({ className = "w-6 h-6" }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}> <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /> </svg> );
+      const ChevronRightIcon = ({ className = "w-6 h-6" }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className={className}> <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /> </svg> );
+      const TikTokIcon = ({ className = "w-6 h-6" }) => ( <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="currentColor"> <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-2.43.03-4.63-1.1-6.16-3.04-1.24-1.57-1.87-3.54-1.87-5.51 0-.01 0-.01 0-.02 1.52-.02 3.05-.02 4.57-.02.01.16.02.33.04.5.04 1.1.52 2.07 1.33 2.82.84.79 1.91 1.11 3.1 1.02.8-.08 1.57-.38 2.21-.92.61-.51 1.02-1.21 1.18-2.02.04-.23.06-.47.06-.7.02-3.12.02-6.24.02-9.36-.01-2.61-.91-5.08-2.65-6.93-1.61-1.7-3.79-2.56-6.13-2.52-1.28.02-2.56.24-3.77.72-.01-1.52-.02-3.05-.01-4.57.51-.15 1.02-.29 1.54-.41 1.28-.29 2.58-.45 3.88-.45z" /> </svg> );
+      const WhatsappIcon = ({ className = "w-6 h-6" }) => ( <svg xmlns="http://www.w3.org/2000/svg" className={className} viewBox="0 0 24 24" fill="currentColor"> <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01s-.521.074-.792.372c-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/> </svg> );
+      const SparklesIcon = ({ className = "w-5 h-5" }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}> <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.562L16.25 22.5l-.648-1.938a3.375 3.375 0 00-2.6-2.6L11.25 18l1.938-.648a3.375 3.375 0 002.6-2.6l.648-1.938 1.938.648a3.375 3.375 0 002.6 2.6l1.938.648-.648 1.938a3.375 3.375 0 00-2.6 2.6z" /> </svg> );
+      const ImageIcon = ({ className = "w-12 h-12" }) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}> <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /> </svg> );
 
       // --- COMPONENTS ---
       const TypingAnimation = ({ text, className }) => {
         const [displayedText, setDisplayedText] = React.useState('');
         const [isDeleting, setIsDeleting] = React.useState(false);
-        
-        const typingSpeed = 80;
-        const deletingSpeed = 40;
-        const pauseTime = 2000;
-
+        const typingSpeed = 80, deletingSpeed = 40, pauseTime = 2000;
         React.useEffect(() => {
             let timeout;
-
             if (isDeleting) {
-                if (displayedText.length > 0) {
-                    timeout = setTimeout(() => {
-                        setDisplayedText(prev => prev.slice(0, -1));
-                    }, deletingSpeed);
-                } else {
-                    // Finished deleting, pause and switch to typing
-                    timeout = setTimeout(() => setIsDeleting(false), 500);
-                }
+                if (displayedText.length > 0) { timeout = setTimeout(() => { setDisplayedText(prev => prev.slice(0, -1)); }, deletingSpeed); } 
+                else { timeout = setTimeout(() => setIsDeleting(false), 500); }
             } else {
-                if (displayedText.length < text.length) {
-                    timeout = setTimeout(() => {
-                        setDisplayedText(prev => text.slice(0, prev.length + 1));
-                    }, typingSpeed);
-                } else {
-                    // Finished typing, pause and switch to deleting
-                    timeout = setTimeout(() => setIsDeleting(true), pauseTime);
-                }
+                if (displayedText.length < text.length) { timeout = setTimeout(() => { setDisplayedText(prev => text.slice(0, prev.length + 1)); }, typingSpeed); } 
+                else { timeout = setTimeout(() => setIsDeleting(true), pauseTime); }
             }
-
             return () => clearTimeout(timeout);
         }, [displayedText, isDeleting, text]);
-        
-        return (
-            <div className="relative">
-                {/* Ghost element for layout reservation */}
-                <h1 className={`${className} invisible`}>
-                    {text}
-                    <span className="font-light">|</span>
-                </h1>
-                
-                {/* Absolutely positioned animated text */}
-                <h1 className={`${className} absolute top-0 left-0`}>
-                    {displayedText}
-                    <span className="animate-pulse font-light">|</span>
-                </h1>
-            </div>
-        );
+        return ( <div className="relative"> <h1 className={`${className} invisible`}>{text}<span className="font-light">|</span></h1> <h1 className={`${className} absolute top-0 left-0`}>{displayedText}<span className="animate-pulse font-light">|</span></h1> </div> );
       };
 
        const ImageSlider = ({ images }) => {
         const [currentIndex, setCurrentIndex] = React.useState(0);
-
-        if (!images || images.length === 0) {
-            return (
-                <div className="aspect-video bg-slate-700/50 rounded-md flex items-center justify-center text-slate-500">
-                    <span>Image Preview</span>
-                </div>
-            );
-        }
-
-        const goToPrevious = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isFirstSlide = currentIndex === 0;
-            const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1;
-            setCurrentIndex(newIndex);
-        };
-
-        const goToNext = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isLastSlide = currentIndex === images.length - 1;
-            const newIndex = isLastSlide ? 0 : currentIndex + 1;
-            setCurrentIndex(newIndex);
-        };
-
+        if (!images || images.length === 0) return <div className="aspect-video bg-slate-700/50 rounded-md flex items-center justify-center text-slate-500"><span>Image Preview</span></div>;
+        const goToPrevious = (e) => { e.preventDefault(); e.stopPropagation(); const isFirstSlide = currentIndex === 0; const newIndex = isFirstSlide ? images.length - 1 : currentIndex - 1; setCurrentIndex(newIndex); };
+        const goToNext = (e) => { e.preventDefault(); e.stopPropagation(); const isLastSlide = currentIndex === images.length - 1; const newIndex = isLastSlide ? 0 : currentIndex + 1; setCurrentIndex(newIndex); };
         return (
             <div className="relative aspect-video rounded-md overflow-hidden group/slider">
-                <img 
-                    src={images[currentIndex]} 
-                    alt={`Project image ${currentIndex + 1}`} 
-                    className="w-full h-full object-cover transition-all duration-500 ease-in-out"
-                />
-                
+                <img src={images[currentIndex]} alt={`Project image ${currentIndex + 1}`} className="w-full h-full object-cover transition-all duration-500 ease-in-out" />
                 {images.length > 1 && (
                     <>
-                        <button
-                            onClick={goToPrevious}
-                            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            aria-label="Previous image"
-                        >
-                            <ChevronLeftIcon className="w-5 h-5" />
-                        </button>
-                        <button
-                            onClick={goToNext}
-                            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-                            aria-label="Next image"
-                        >
-                            <ChevronRightIcon className="w-5 h-5" />
-                        </button>
+                        <button onClick={goToPrevious} className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400" aria-label="Previous image"><ChevronLeftIcon className="w-5 h-5" /></button>
+                        <button onClick={goToNext} className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400" aria-label="Next image"><ChevronRightIcon className="w-5 h-5" /></button>
                          <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex space-x-2">
-                            {images.map((_, slideIndex) => (
-                                <div
-                                    key={slideIndex}
-                                    className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${currentIndex === slideIndex ? 'bg-white scale-110 w-4' : 'bg-white/50'}`}
-                                ></div>
-                            ))}
+                            {images.map((_, slideIndex) => ( <div key={slideIndex} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${currentIndex === slideIndex ? 'bg-white scale-110 w-4' : 'bg-white/50'}`}></div> ))}
                         </div>
                     </>
                 )}
@@ -246,258 +145,130 @@
         );
     };
       
-      const HeroSection = () => {
-        return (
+      const HeroSection = () => (
           <section className="min-h-screen flex items-center justify-center p-4 md:p-8">
             <div className="max-w-5xl w-full flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
-              {/* Left side: Image */}
               <div className="relative flex-shrink-0 w-52 h-52 md:w-64 md:h-64">
-                {/* Spinning background. The conic gradient now has transparent parts to create an arc effect. */}
                 <div className="absolute inset-0 rounded-full bg-[conic-gradient(from_90deg_at_50%_50%,transparent_0%,#22d3ee_25%,#14b8a6_75%,transparent_100%)] animate-spin-slow"></div>
-                
-                {/* This div acts as a mask, revealing only the edge of the spinning gradient. The inset controls the border thickness. */}
                 <div className="absolute inset-1.5 bg-slate-900 rounded-full p-1 flex items-center justify-center">
-                    <img
-                      src="https://raw.githubusercontent.com/pakudin999/web-porfolio-fikrie-pro/433a5e248d07be2a7679863a789ceb00db4e0f81/photofikrie.png"
-                      alt="Mohamad Fikrie"
-                      className="w-full h-full rounded-full object-cover transition-transform duration-300 ease-in-out hover:scale-105"
-                    />
+                    <img src="https://raw.githubusercontent.com/pakudin999/web-porfolio-fikrie-pro/433a5e248d07be2a7679863a789ceb00db4e0f81/photofikrie.png" alt="Mohamad Fikrie" className="w-full h-full rounded-full object-cover transition-transform duration-300 ease-in-out hover:scale-105" />
                 </div>
               </div>
-
-
-              {/* Right side: Text content */}
               <div className="flex flex-col items-center md:items-start text-center md:text-left">
-                <TypingAnimation
-                  text="Mohamad Fikrie"
-                  className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500"
-                />
-                <h2 className="text-xl md:text-2xl font-medium text-slate-400 mb-4">
-                  Content Creator & AI Enthusiast
-                </h2>
+                <TypingAnimation text="Mohamad Fikrie" className="text-4xl sm:text-5xl md:text-7xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500" />
+                <h2 className="text-xl md:text-2xl font-medium text-slate-400 mb-4">Content Creator & AI Enthusiast</h2>
                 <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-teal-500 rounded-full mb-8"></div>
                 <div className="max-w-xl p-6 rounded-xl bg-slate-800/50 backdrop-blur-sm border border-slate-700/50">
-                  <p className="text-slate-300 leading-relaxed">
-                    A passionate multimedia creative from Johor, Malaysia, with a diploma in Multimedia Application. I blend cutting-edge editing skills with AI innovation to bring digital stories to life.
-                  </p>
+                  <p className="text-slate-300 leading-relaxed"> A passionate multimedia creative from Johor, Malaysia, with a diploma in Multimedia Application. I blend cutting-edge editing skills with AI innovation to bring digital stories to life. </p>
                 </div>
               </div>
             </div>
           </section>
-        );
-      };
+      );
 
-      const SocialMediaSection = () => {
-        const services = [
-            {
-              type: 'video',
-              mediaSrc: "https://drive.google.com/file/d/1b_6DOzPpbvL-BmVTAm4pxVsNtBWKNd4l/preview",
-              title: "RM50 Je? Logo Power Macam Ni Pun Boleh?!",
-              priceText: "LOGO TYPO STYLE",
-              originalPrice: "100",
-              discountedPrice: "50",
-              details: "Unik &bull; Cepat &bull; Siap Pakai",
-              promo: "Promo terhad – tempah sekarang!",
-              whatsappMessage: "hye, saya nak tanya untuk pakage RM50 Je? Logo Power Macam Ni Pun Boleh?! 🔥 LOGO TYPO STYLE DARI RM100 → RM50 SAHAJA"
-            },
-            {
-              type: 'image',
-              mediaSrc: "https://i.imgur.com/uJiYtNh.png",
-              title: "EDIT WARNA BAJU",
-              priceText: "",
-              originalPrice: "10",
-              discountedPrice: "5",
-              details: "Hasil natural. Siap dalam 24 jam.",
-              promo: "Promo terhad — jangan lepas!",
-              whatsappMessage: "hye, saya nak tanya untuk pakage RM5 Je? EDIT WARNA BAJU."
-            }
-        ];
+      const InteractiveSection = () => {
+        const [activeTab, setActiveTab] = React.useState('editing');
 
+        const services = [ { type: 'video', mediaSrc: "https://drive.google.com/file/d/1b_6DOzPpbvL-BmVTAm4pxVsNtBWKNd4l/preview", title: "RM50 Je? Logo Power Macam Ni Pun Boleh?!", priceText: "LOGO TYPO STYLE", originalPrice: "100", discountedPrice: "50", details: "Unik &bull; Cepat &bull; Siap Pakai", promo: "Promo terhad – tempah sekarang!", whatsappMessage: "hye, saya nak tanya untuk pakage RM50 Je? Logo Power Macam Ni Pun Boleh?! 🔥 LOGO TYPO STYLE DARI RM100 → RM50 SAHAJA" }, { type: 'image', mediaSrc: "https://i.imgur.com/uJiYtNh.png", title: "EDIT WARNA BAJU", priceText: "", originalPrice: "10", discountedPrice: "5", details: "Hasil natural. Siap dalam 24 jam.", promo: "Promo terhad — jangan lepas!", whatsappMessage: "hye, saya nak tanya untuk pakage RM5 Je? EDIT WARNA BAJU." } ];
         const [currentServiceIndex, setCurrentServiceIndex] = React.useState(0);
-
-        const goToPreviousService = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isFirst = currentServiceIndex === 0;
-            const newIndex = isFirst ? services.length - 1 : currentServiceIndex - 1;
-            setCurrentServiceIndex(newIndex);
-        };
-
-        const goToNextService = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isLast = currentServiceIndex === services.length - 1;
-            const newIndex = isLast ? 0 : currentServiceIndex + 1;
-            setCurrentServiceIndex(newIndex);
-        };
-        
-        const goToService = (index) => {
-            setCurrentServiceIndex(index);
-        }
-
+        const goToPreviousService = (e) => { e.preventDefault(); e.stopPropagation(); const isFirst = currentServiceIndex === 0; const newIndex = isFirst ? services.length - 1 : currentServiceIndex - 1; setCurrentServiceIndex(newIndex); };
+        const goToNextService = (e) => { e.preventDefault(); e.stopPropagation(); const isLast = currentServiceIndex === services.length - 1; const newIndex = isLast ? 0 : currentServiceIndex + 1; setCurrentServiceIndex(newIndex); };
+        const goToService = (index) => { setCurrentServiceIndex(index); }
         const currentService = services[currentServiceIndex];
         const whatsappMessage = encodeURIComponent(currentService.whatsappMessage);
         const whatsappUrl = `https://wa.me/60103602036?text=${whatsappMessage}`;
 
+        const TabButton = ({ isActive, onClick, children }) => (
+          <button
+            onClick={onClick}
+            className={`px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base font-bold rounded-t-lg transition-all duration-300 relative focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 focus:ring-cyan-400 ${
+              isActive ? 'text-cyan-300' : 'text-slate-500 hover:text-slate-300'
+            }`}
+          >
+            {children}
+            {isActive && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-400"></div>}
+          </button>
+        );
+
         return (
-          <section id="socials" className="py-20 px-4 md:px-8">
+          <section id="services" className="py-20 px-4 md:px-8">
             <div className="max-w-5xl mx-auto">
               
-              <div className="text-center mb-12">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
-                      Service Editing
-                  </h2>
-                  <p className="text-slate-500">Bringing your creative vision to life.</p>
+              <div className="flex justify-center border-b border-slate-800 mb-12">
+                <TabButton isActive={activeTab === 'editing'} onClick={() => setActiveTab('editing')}>Service Editing</TabButton>
+                <TabButton isActive={activeTab === 'ai'} onClick={() => setActiveTab('ai')}>Voice Generator</TabButton>
               </div>
 
-               {/* Featured Service Slider with Glassmorphism Effect */}
-              <div className="relative max-w-4xl mx-auto bg-slate-800/30 backdrop-blur-lg border border-slate-700/50 rounded-xl p-4 md:p-6 mb-16 shadow-lg shadow-cyan-500/10 group/service-slider">
-                
-                <div key={currentServiceIndex} className="animate-fade-in">
-                  <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
-                    {/* Left: Media Preview */}
-                    <div className="w-full md:w-1/2 flex-shrink-0">
-                      {currentService.type === 'video' ? (
-                          <div className="aspect-video-container shadow-lg shadow-black/30">
-                            <iframe
-                              src={currentService.mediaSrc}
-                              frameBorder="0"
-                              allow="autoplay; encrypted-media"
-                              allowFullScreen
-                              title={currentService.title}
-                              className="w-full h-full"
-                            ></iframe>
+              {activeTab === 'editing' && (
+                <div className="animate-fade-in">
+                  <div className="text-center mb-12">
+                      <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">Service Editing</h2>
+                      <p className="text-slate-500">Bringing your creative vision to life.</p>
+                  </div>
+                  <div className="relative max-w-4xl mx-auto bg-slate-800/30 backdrop-blur-lg border border-slate-700/50 rounded-xl p-4 md:p-6 mb-16 shadow-lg shadow-cyan-500/10 group/service-slider">
+                    <div key={currentServiceIndex} className="animate-fade-in">
+                      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-8">
+                        <div className="w-full md:w-1/2 flex-shrink-0">
+                          {currentService.type === 'video' ? ( <div className="aspect-video-container shadow-lg shadow-black/30"> <iframe src={currentService.mediaSrc} frameBorder="0" allow="autoplay; encrypted-media" allowFullScreen title={currentService.title} className="w-full h-full"></iframe> </div> ) : ( <div className="aspect-video rounded-md overflow-hidden shadow-lg shadow-black/30 bg-slate-900/50"> <img src={currentService.mediaSrc} alt={currentService.title} className="w-full h-full object-contain" /> </div> )}
+                        </div>
+                        <div className="w-full md:w-1/2 flex flex-col justify-center">
+                          <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-4">{currentService.title}</h3>
+                          <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-3 mb-4"> <p className="text-lg font-semibold text-amber-400"> 🔥 {currentService.priceText && `${currentService.priceText} DARI `} <del className="text-amber-400/50">RM{currentService.originalPrice}</del> &rarr; RM{currentService.discountedPrice} SAHAJA! </p> </div>
+                          <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                              <div>
+                                  <p className="text-slate-400" dangerouslySetInnerHTML={{ __html: currentService.details }}></p>
+                                  <p className="text-sm text-slate-500 mt-1">{currentService.promo}</p>
+                              </div>
+                              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-green-500/10 text-green-300 hover:bg-green-500/20 px-4 py-2 rounded-lg transition-colors font-bold self-start sm:self-auto text-sm shrink-0"> <WhatsappIcon className="w-5 h-5" /> <span>Tempah di WhatsApp</span> </a>
                           </div>
-                      ) : (
-                          <div className="aspect-video rounded-md overflow-hidden shadow-lg shadow-black/30 bg-slate-900/50">
-                              <img src={currentService.mediaSrc} alt={currentService.title} className="w-full h-full object-contain" />
-                          </div>
-                      )}
-                    </div>
-                    {/* Right: Info Text */}
-                    <div className="w-full md:w-1/2 flex flex-col justify-center">
-                      <h3 className="text-xl md:text-2xl font-bold text-slate-100 mb-4">
-                        {currentService.title}
-                      </h3>
-                      <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-3 mb-4">
-                        <p className="text-lg font-semibold text-amber-400">
-                          🔥 {currentService.priceText && `${currentService.priceText} DARI `}
-                          <del className="text-amber-400/50">RM{currentService.originalPrice}</del> &rarr; RM{currentService.discountedPrice} SAHAJA!
-                        </p>
-                      </div>
-                      
-                      <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div>
-                              <p className="text-slate-400" dangerouslySetInnerHTML={{ __html: currentService.details }}></p>
-                              <p className="text-sm text-slate-500 mt-1">
-                                  {currentService.promo}
-                              </p>
-                          </div>
-                          <a 
-                              href={whatsappUrl} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-2 bg-green-500/10 text-green-300 hover:bg-green-500/20 px-4 py-2 rounded-lg transition-colors font-bold self-start sm:self-auto text-sm shrink-0"
-                          >
-                              <WhatsappIcon className="w-5 h-5" />
-                              <span>Tempah di WhatsApp</span>
-                          </a>
+                        </div>
                       </div>
                     </div>
+                    {services.length > 1 && (
+                        <>
+                            <button onClick={goToPreviousService} className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/service-slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400 z-10" aria-label="Previous service"><ChevronLeftIcon className="w-5 h-5" /></button>
+                            <button onClick={goToNextService} className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/service-slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400 z-10" aria-label="Next service"><ChevronRightIcon className="w-5 h-5" /></button>
+                            <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex space-x-2">
+                                {services.map((_, slideIndex) => ( <button key={slideIndex} onClick={() => goToService(slideIndex)} aria-label={`Go to service ${slideIndex + 1}`} className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${currentServiceIndex === slideIndex ? 'bg-white scale-110 w-4' : 'bg-white/50'}`}></button> ))}
+                            </div>
+                        </>
+                    )}
                   </div>
                 </div>
+              )}
+              
+              {activeTab === 'ai' && (
+                <div className="animate-fade-in max-w-4xl mx-auto bg-slate-800/30 backdrop-blur-lg border border-slate-700/50 rounded-xl shadow-lg shadow-cyan-500/10 overflow-hidden">
+                    <iframe
+                        src="http://voicegenerator.konten.site/"
+                        style={{ width: '100%', height: '650px', border: 'none' }}
+                        title="Voice Generator"
+                        sandbox="allow-scripts allow-same-origin"
+                    ></iframe>
+                </div>
+              )}
 
-                {/* Slider Controls */}
-                {services.length > 1 && (
-                    <>
-                        <button
-                            onClick={goToPreviousService}
-                            className="absolute top-1/2 left-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/service-slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400 z-10"
-                            aria-label="Previous service"
-                        >
-                            <ChevronLeftIcon className="w-5 h-5" />
-                        </button>
-                        <button
-                            onClick={goToNextService}
-                            className="absolute top-1/2 right-2 -translate-y-1/2 bg-black/40 text-white p-1 rounded-full opacity-0 group-hover/service-slider:opacity-100 transition-opacity duration-300 hover:bg-black/60 focus:outline-none focus:ring-2 focus:ring-cyan-400 z-10"
-                            aria-label="Next service"
-                        >
-                            <ChevronRightIcon className="w-5 h-5" />
-                        </button>
-                        <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex space-x-2">
-                            {services.map((_, slideIndex) => (
-                                <button
-                                    key={slideIndex}
-                                    onClick={() => goToService(slideIndex)}
-                                    aria-label={`Go to service ${slideIndex + 1}`}
-                                    className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${currentServiceIndex === slideIndex ? 'bg-white scale-110 w-4' : 'bg-white/50'}`}
-                                ></button>
-                            ))}
-                        </div>
-                    </>
-                )}
-
-              </div>
-
-
-              <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
-                  Connect With Me
-                </h2>
+              <div className="text-center mb-12 mt-24">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">Connect With Me</h2>
                 <p className="text-slate-500">Follow my journey and creative work.</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                
-                {/* YouTube Card */}
                 <div className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg p-3 sm:p-4 transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
-                  <div className="aspect-video-container mb-4">
-                    <iframe
-                      src="https://www.youtube.com/embed/6QeXlzO8p90"
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      className="w-full h-full"
-                    ></iframe>
-                  </div>
+                  <div className="aspect-video-container mb-4"> <iframe src="https://www.youtube.com/embed/6QeXlzO8p90" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full"></iframe> </div>
                   <div className="flex flex-col flex-grow">
-                    <h3 className="text-base sm:text-xl font-bold text-slate-100 mb-2">
-                      📺 YouTube
-                    </h3>
-                    <p className="text-slate-400 mb-4 text-xs sm:text-sm leading-relaxed flex-grow">
-                      Exclusive videos exploring social themes.
-                    </p>
-                    <a href="https://youtu.be/6QeXlzO8p90?si=HZawk-ETWvAqU_XZ" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center text-center gap-1 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 px-3 py-2 sm:px-4 rounded-lg transition-colors font-bold self-start text-xs sm:text-sm">
-                      Watch Now
-                      <ExternalLinkIcon className="w-4 h-4" />
-                    </a>
+                    <h3 className="text-base sm:text-xl font-bold text-slate-100 mb-2">📺 YouTube</h3>
+                    <p className="text-slate-400 mb-4 text-xs sm:text-sm leading-relaxed flex-grow">Exclusive videos exploring social themes.</p>
+                    <a href="https://youtu.be/6QeXlzO8p90?si=HZawk-ETWvAqU_XZ" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center text-center gap-1 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 px-3 py-2 sm:px-4 rounded-lg transition-colors font-bold self-start text-xs sm:text-sm"> Watch Now <ExternalLinkIcon className="w-4 h-4" /> </a>
                   </div>
                 </div>
-
-                {/* TikTok Card */}
                 <div className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg p-3 sm:p-4 transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
-                  <div className="aspect-video rounded-md overflow-hidden mb-4">
-                    <img
-                      src="https://i.imgur.com/GfKGtgc.png"
-                      alt="TikTok thumbnail"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  <div className="aspect-video rounded-md overflow-hidden mb-4"> <img src="https://i.imgur.com/GfKGtgc.png" alt="TikTok thumbnail" className="w-full h-full object-cover" /> </div>
                   <div className="flex flex-col flex-grow">
-                    <h3 className="text-base sm:text-xl font-bold text-slate-100 mb-2 flex items-center gap-2">
-                      <TikTokIcon className="w-5 h-5"/>
-                      TikTok
-                    </h3>
-                    <p className="text-slate-400 mb-4 text-xs sm:text-sm leading-relaxed flex-grow">
-                      A place for my spontaneous creative content.
-                    </p>
-                    <a href="https://www.tiktok.com/@konten_beban?_t=ZS-8xC1ifBV3zc&_r=1" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center text-center gap-1 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 px-3 py-2 sm:px-4 rounded-lg transition-colors font-bold self-start text-xs sm:text-sm">
-                      View Profile
-                      <ExternalLinkIcon className="w-4 h-4" />
-                    </a>
+                    <h3 className="text-base sm:text-xl font-bold text-slate-100 mb-2 flex items-center gap-2"> <TikTokIcon className="w-5 h-5"/> TikTok </h3>
+                    <p className="text-slate-400 mb-4 text-xs sm:text-sm leading-relaxed flex-grow"> A place for my spontaneous creative content. </p>
+                    <a href="https://www.tiktok.com/@konten_beban?_t=ZS-8xC1ifBV3zc&_r=1" target="_blank" rel="noopener noreferrer" className="mt-auto inline-flex items-center justify-center text-center gap-1 bg-cyan-500/10 text-cyan-300 hover:bg-cyan-500/20 px-3 py-2 sm:px-4 rounded-lg transition-colors font-bold self-start text-xs sm:text-sm"> View Profile <ExternalLinkIcon className="w-4 h-4" /> </a>
                   </div>
                 </div>
-
               </div>
             </div>
           </section>
@@ -509,37 +280,20 @@
           <section id="projects" className="py-20 px-4 md:px-8">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500">
-                  My Projects
-                </h2>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-2 gradient-text bg-gradient-to-r from-cyan-400 to-teal-500"> My Projects </h2>
                 <p className="text-slate-500">Purchase & Customization</p>
               </div>
               <div className="grid grid-cols-2 gap-4 md:gap-8">
                 {projects.map((project) => {
                   const isLinkable = !!project.url;
                   const Tag = isLinkable ? 'a' : 'div';
-                  const tagProps = isLinkable 
-                    ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' } 
-                    : {};
-
+                  const tagProps = isLinkable ? { href: project.url, target: '_blank', rel: 'noopener noreferrer' } : {};
                   return (
-                    <Tag
-                      key={project.title}
-                      {...tagProps}
-                      className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg group transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1"
-                    >
-                      <div className="p-2">
-                          <ImageSlider images={project.images} />
-                      </div>
+                    <Tag key={project.title} {...tagProps} className="flex flex-col bg-slate-800/50 border border-slate-700/50 rounded-lg group transition-all duration-300 ease-in-out hover:bg-slate-800 hover:border-cyan-400/50 hover:shadow-lg hover:shadow-cyan-500/10 hover:-translate-y-1">
+                      <div className="p-2"> <ImageSlider images={project.images} /> </div>
                       <div className="p-4 pt-2 flex-grow flex justify-between items-center">
-                        <h3 className="text-base md:text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300">
-                          {project.title}
-                        </h3>
-                        {isLinkable && (
-                          <div className="transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                            <ExternalLinkIcon className="w-5 h-5 text-slate-500 group-hover:text-teal-400" />
-                          </div>
-                        )}
+                        <h3 className="text-base md:text-lg font-bold text-slate-100 group-hover:text-cyan-400 transition-colors duration-300"> {project.title} </h3>
+                        {isLinkable && ( <div className="transform transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1"> <ExternalLinkIcon className="w-5 h-5 text-slate-500 group-hover:text-teal-400" /> </div> )}
                       </div>
                     </Tag>
                   );
@@ -552,18 +306,14 @@
 
       const Footer = () => {
         const currentYear = new Date().getFullYear();
-        return (
-          <footer className="py-8 px-4 md:px-8 text-center text-slate-500 border-t border-slate-800">
-            <p>&copy; {currentYear} MOHAMAD FIKRIE</p>
-          </footer>
-        );
+        return ( <footer className="py-8 px-4 md:px-8 text-center text-slate-500 border-t border-slate-800"> <p>&copy; {currentYear} MOHAMAD FIKRIE</p> </footer> );
       };
 
       const App = () => {
         return (
           <main className="bg-slate-900 min-h-screen">
             <HeroSection />
-            <SocialMediaSection />
+            <InteractiveSection />
             <ProjectsSection />
             <Footer />
           </main>
